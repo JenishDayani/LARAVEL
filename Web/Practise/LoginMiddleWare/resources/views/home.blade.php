@@ -13,6 +13,11 @@
                             {{ session('status') }}
                         </div>
                     @endif
+                    @if (session('error'))
+                        <div class="alert alert-danger" role="alert">
+                            {{ session('error') }}
+                        </div>
+                    @endif
                     <h3>WELCOME TO USER DASHBOARD</h3>
                     {{ __('You are logged in!') }}
                 </div>
