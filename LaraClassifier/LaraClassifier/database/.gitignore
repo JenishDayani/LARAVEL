@@ -1,4 +1,0 @@
-*.sqlite
-*.sqlite-journal
-/factories/*
-/seeders/Factories
