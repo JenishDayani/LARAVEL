@@ -18,7 +18,7 @@
                             {{ session('error') }}
                         </div>
                     @endif
-                    <h3>WELCOME TO ADMIN DASHBOARD</h3>
+                    <h3>WELCOME TO Editor DASHBOARD</h3>
                     {{ __('You are logged in!') }}
                 </div>
             </div>
