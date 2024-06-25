@@ -1,6 +1,6 @@
 <?php
 
-  $recentBlogs = Session::get('recentBlogs');
+  // $recentBlogs = Session::get('recentBlogs');
 
 ?>
   </main><!-- End #main -->

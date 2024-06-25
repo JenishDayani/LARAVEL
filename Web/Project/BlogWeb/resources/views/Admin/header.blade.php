@@ -1,8 +1,8 @@
 <?php
 
-if(Session::has('admin'))
+if(Auth::check())
 {
-  $admin = Session::get('admin');
+  $admin = Auth::user();
 }
 
 ?>

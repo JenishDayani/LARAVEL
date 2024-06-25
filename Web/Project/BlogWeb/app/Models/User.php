@@ -21,7 +21,8 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'profile'
+        'profile',
+        'role'
     ];
 
     /**
@@ -42,6 +43,13 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    // protected function role(): string
+    // {
+    //     return new Attribute(
+    //         get: fn ($value) => ["user","admin"][$value],
+    //     );
+    // }
 
 
     function profiles()

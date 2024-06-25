@@ -5,6 +5,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\MailController;
 use App\Http\Controllers\BlogController;
+use App\Http\Controllers\LoginController;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,49 +19,52 @@ use App\Http\Controllers\BlogController;
 */
 
 // Route::get('/', function () {
-//     return view('welcome');
-// });
+ //     return view('welcome');
+ // });
 
 
 
-// User
+//  // User
 
-Route::get('/',[UserController::class,'index'])->name('Home');
-Route::get('/login',[UserController::class,'login'])->name('Login');
-Route::post('/login',[UserController::class,'login'])->name('Login');
-Route::get('/logout',[UserController::class,'logout'])->name('Logout');
-Route::get('/profile',[UserController::class,'viewUserProfile'])->name('UserViewProfile');
-Route::get('/profile/edit',[UserController::class,'editUserProfile'])->name('UserEditProfile');
-Route::post('/profile/edit',[UserController::class,'editUserProfile'])->name('UserEditProfile');
+//  Route::get('/',[UserController::class,'index'])->name('Home');
+//  Route::get('/login',[UserController::class,'login'])->name('Login');
+//  Route::post('/login',[UserController::class,'login'])->name('Login');
 
 
 
-// Admin
+//  Route::get('/logout',[UserController::class,'logout'])->name('Logout');
+//  Route::get('/profile',[UserController::class,'viewUserProfile'])->name('UserViewProfile');
+// Route::get('/profile/edit',[UserController::class,'editUserProfile'])->name('UserEditProfile');
+// Route::post('/profile/edit',[UserController::class,'editUserProfile'])->name('UserEditProfile');
 
 
-Route::get('/admin', [AdminController::class,'home'])->name('AdminHome');
-Route::post('/register', [AdminController::class,'createUser'])->name('CreateUser');
-Route::get('/register', [AdminController::class,'createUser'])->name('CreateUser');
-Route::get('/admin/profile', [AdminController::class,'viewProfile'])->name('AdminViewProfile');
-Route::post('/admin/profile', [AdminController::class,'viewProfile'])->name('AdminViewProfile');
+
+// // Admin
 
 
-// Blog
+// Route::get('/admin', [AdminController::class,'home'])->name('AdminHome');
+// Route::post('/register', [AdminController::class,'createUser'])->name('CreateUser');
+// Route::get('/register', [AdminController::class,'createUser'])->name('CreateUser');
+// Route::get('/admin/profile', [AdminController::class,'viewProfile'])->name('AdminViewProfile');
+// Route::post('/admin/profile', [AdminController::class,'viewProfile'])->name('AdminViewProfile');
 
 
-Route::post('/admin/blogCreate', [BlogController::class,'createBlog'])->name('CreateBlog');
-Route::get('/admin/blogCreate', [BlogController::class,'createBlog'])->name('CreateBlog');
-Route::get('/admin/viewBlog', [BlogController::class,'adminViewBlog'])->name('AdminViewBlog');
-Route::get('/admin/editBlog/{id}', [BlogController::class,'adminEditBlog'])->name('EditBlog');
-Route::post('/admin/editBlog/{id}', [BlogController::class,'adminEditBlog'])->name('EditBlog');
-Route::get('/admin/deleteBlog/{id}', [BlogController::class,'adminDeleteBlog'])->name('DeleteBlog');
-Route::post('/admin/deleteBlog/{id}', [BlogController::class,'adminDeleteBlog'])->name('DeleteBlog');
+// // Blog
 
 
-Route::get('/likeBlogView', [BlogController::class,'likeBlogView'])->name('LikeBlogView');
-Route::get('/likeBlog/{id}', [BlogController::class,'likeBlog'])->name('LikeBlog');
-Route::post('/likeBlog/{id}', [BlogController::class,'likeBlog'])->name('LikeBlog');
-Route::get('/Blog/{tag}', [BlogController::class,'tagBlog'])->name('TagBlog');
+// Route::post('/admin/blogCreate', [BlogController::class,'createBlog'])->name('CreateBlog');
+// Route::get('/admin/blogCreate', [BlogController::class,'createBlog'])->name('CreateBlog');
+// Route::get('/admin/viewBlog', [BlogController::class,'adminViewBlog'])->name('AdminViewBlog');
+// Route::get('/admin/editBlog/{id}', [BlogController::class,'adminEditBlog'])->name('EditBlog');
+// Route::post('/admin/editBlog/{id}', [BlogController::class,'adminEditBlog'])->name('EditBlog');
+// Route::get('/admin/deleteBlog/{id}', [BlogController::class,'adminDeleteBlog'])->name('DeleteBlog');
+// Route::post('/admin/deleteBlog/{id}', [BlogController::class,'adminDeleteBlog'])->name('DeleteBlog');
+
+
+// Route::get('/likeBlogView', [BlogController::class,'likeBlogView'])->name('LikeBlogView');
+// Route::get('/likeBlog/{id}', [BlogController::class,'likeBlog'])->name('LikeBlog');
+// Route::post('/likeBlog/{id}', [BlogController::class,'likeBlog'])->name('LikeBlog');
+// Route::get('/Blog/{tag}', [BlogController::class,'tagBlog'])->name('TagBlog');
 
 
 // Mail 
@@ -70,6 +74,60 @@ Route::get('/mail', [MailController::class,'index'])->name('mail');
 
 
 // Route::middleware('auth:api')->group(function () {
-//     // Route::get('/hello',[UserController::class,'index']);
-// });
+ //     // Route::get('/hello',[UserController::class,'index']);
+ // });
 
+ // Auth::routes();
+
+
+  // Route::get('/',[LoginController::class,'index'])->name('Home');
+  // Route::get('/login',[LoginController::class,'login'])->name('Login');
+  // Route::post('/login',[LoginController::class,'login'])->name('Login');
+
+  // Route::get('/Blog/{tag}', [LoginController::class,'tagBlog'])->name('TagBlog');
+
+  Route::get('/',[UserController::class,'index'])->name('Home');
+  Route::get('/login',[UserController::class,'login'])->name('Login');
+  Route::post('/login',[UserController::class,'login'])->name('Login');
+
+  Route::get('/Blog/{tag}', [BlogController::class,'tagBlog'])->name('TagBlog');
+
+
+
+  Route::middleware('auth')->group(function () {
+      Route::get('/logout',[UserController::class,'logout'])->name('Logout');
+  });
+
+
+Route::middleware(['auth', 'check_user:0'])->group(function () {
+  // Route::get('/logout',[UserController::class,'logout'])->name('Logout');
+  Route::get('/profile',[UserController::class,'viewUserProfile'])->name('UserViewProfile');
+  Route::get('/profile/edit',[UserController::class,'editUserProfile'])->name('UserEditProfile');
+  Route::post('/profile/edit',[UserController::class,'editUserProfile'])->name('UserEditProfile');
+  
+  
+  Route::get('/likeBlogView', [BlogController::class,'likeBlogView'])->name('LikeBlogView');
+  Route::get('/likeBlog/{id}', [BlogController::class,'likeBlog'])->name('LikeBlog');
+  Route::post('/likeBlog/{id}', [BlogController::class,'likeBlog'])->name('LikeBlog');
+});
+
+Route::middleware(['auth', 'check_user:1'])->group(function () {
+  
+  // Admin
+  // Route::get('/logout',[UserController::class,'logout'])->name('Logout');
+  Route::get('/admin', [AdminController::class,'home'])->name('AdminHome');
+  Route::post('/register', [AdminController::class,'createUser'])->name('CreateUser');
+  Route::get('/register', [AdminController::class,'createUser'])->name('CreateUser');
+  Route::get('/admin/profile', [AdminController::class,'viewProfile'])->name('AdminViewProfile');
+  Route::post('/admin/profile', [AdminController::class,'viewProfile'])->name('AdminViewProfile');
+  
+  
+  //Blog
+  Route::post('/admin/blogCreate', [BlogController::class,'createBlog'])->name('CreateBlog');
+    Route::get('/admin/blogCreate', [BlogController::class,'createBlog'])->name('CreateBlog');
+    Route::get('/admin/viewBlog', [BlogController::class,'adminViewBlog'])->name('AdminViewBlog');
+    Route::get('/admin/editBlog/{id}', [BlogController::class,'adminEditBlog'])->name('EditBlog');
+    Route::post('/admin/editBlog/{id}', [BlogController::class,'adminEditBlog'])->name('EditBlog');
+    Route::get('/admin/deleteBlog/{id}', [BlogController::class,'adminDeleteBlog'])->name('DeleteBlog');
+    Route::post('/admin/deleteBlog/{id}', [BlogController::class,'adminDeleteBlog'])->name('DeleteBlog');
+});
