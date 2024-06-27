@@ -144,8 +144,8 @@ class UserController extends Controller
     {
         if($req->has('login'))
         {
-            $email = $req->input('email');
-            $password = $req->input('pass');
+            $email = $req->email;
+            $password = $req->pass;
             if(User::where('email',$email)->exists())
             {
                 if(Auth::attempt(['email' => $email, 'password' => $password]))
@@ -191,9 +191,9 @@ class UserController extends Controller
                 $query->where('user_id', $user->id);
             }])->get();
 
-            if($req->input('searchSubmit'))
+            if($req->searchSubmit)
             {
-                $tag = $req->input('search');
+                $tag = $req->search;
                 $blogs = Blogs::with(['like' => function ($query) use ($user) {
                             $query->where('user_id', $user->id);
                         }])->where('tag', 'LIKE', "%$tag%")->get();
@@ -212,7 +212,7 @@ class UserController extends Controller
                         }])->get();
             if($req->input('searchSubmit'))
             {
-                $tag = $req->input('search');
+                $tag = $req->search;
                 $blogs = Blogs::with(['like' => function ($query) use ($user) {
                             $query->where('user_id', $user);
                         }])->where('tag', 'LIKE', "%$tag%")->get();
@@ -245,14 +245,25 @@ class UserController extends Controller
         $recentBlogs = recentBlogsGet();
         $user = Auth::user();
         $profile = User::with('profiles')->find($user->id);
-        if($req->input('update'))
+        if($req->update)
         {
-            $profileEdit = Profile::where('user_id',$user->id)->first();
-            $name = $req->input('name');
-            $email = $req->input('email');
-            $address = $req->address;
-            $mobile = $req->input('mobile');
-            $gender = $req->input('gender');
+            $req->validate([
+                'name' => 'required|string|max:255',
+                'email' => 'required|string|email|max:255',
+                'mobile' => 'required|numeric',
+                'address' => 'required|string|max:255',
+                'gender' => 'required',
+                'profile' => 'image|mimes:jpg,jpeg,png|max:204',
+                ]);
+
+            // $profileEdit = Profile::where('user_id',$user->id)->first();
+            $allData = $req->all();
+            updateProfileInformation($allData);
+            // $name = $req->name;
+            // $email = $req->email;
+            // $address = $req->address;
+            // $mobile = $req->mobile;
+            // $gender = $req->gender;
             $profileImage = $user->profile;    
             if($req->hasFile('profile'))
             {
@@ -267,24 +278,25 @@ class UserController extends Controller
                 $req->file('profile')->move(public_path('storage/User/img'),$profileImage);
             }
 
-            $user->name = $name;
-            $user->email = $email;
             $user->profile = $profileImage;
 
-            $profileEdit->address = $address;
-            $profileEdit->mobile = $mobile;
-            $profileEdit->gender = $gender;
+            // $user->name = $name;
+            // $user->email = $email;
+
+            // $profileEdit->address = $address;
+            // $profileEdit->mobile = $mobile;
+            // $profileEdit->gender = $gender;
 
             $user->save();
-            $profileEdit->save();
+            // $profileEdit->save();
 
-            $data = [
-                'name' => $name,
-                'email' => $email,
-                'address' => $address,
-                'mobile' => $mobile,
-                'gender' => $gender,
-            ];
+            // $data = [
+            //     'name' => $name,
+            //     'email' => $email,
+            //     'address' => $address,
+            //     'mobile' => $mobile,
+            //     'gender' => $gender,
+            // ];
             return redirect()->route('UserViewProfile');
         }
         return view('User.editProfile',compact(['profile','recentBlogs']));

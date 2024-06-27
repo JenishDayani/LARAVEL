@@ -15,8 +15,13 @@ class LoginController extends Controller
     {
         if($req->has('login'))
         {
-            $email = $req->input('email');
-            $password = $req->input('pass');
+            $req->validate([
+                'email' => 'required|email',
+                'pass' => 'required'
+            ]);
+
+            $email = $req->email;
+            $password = $req->pass;
             if(User::where('email',$email)->exists())
             {
                 if(Auth::attempt(['email' => $email, 'password' => $password]))
@@ -62,9 +67,9 @@ class LoginController extends Controller
                 $query->where('user_id', $user->id);
             }])->get();
 
-            if($req->input('searchSubmit'))
+            if($req->searchSubmit)
             {
-                $tag = $req->input('search');
+                $tag = $req->search;
                 $blogs = Blogs::with(['like' => function ($query) use ($user) {
                             $query->where('user_id', $user->id);
                         }])->where('tag', 'LIKE', "%$tag%")->get();
@@ -80,10 +85,10 @@ class LoginController extends Controller
             $user = 0;
             $blogs = Blogs::with(['like' => function ($query) use ($user) {
                             $query->where('user_id', $user);
-                        }])->get();
-            if($req->input('searchSubmit'))
+                    }])->get();
+            if($req->searchSubmit)
             {
-                $tag = $req->input('search');
+                $tag = $req->search;
                 $blogs = Blogs::with(['like' => function ($query) use ($user) {
                             $query->where('user_id', $user);
                         }])->where('tag', 'LIKE', "%$tag%")->get();

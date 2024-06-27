@@ -144,6 +144,23 @@
   <!-- Template Main JS File -->
   <script src="{{('storage/User')}}/js/main.js"></script>
 
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const sliderAlert = document.getElementById('slider-alert');
+
+      setTimeout(() => {
+        sliderAlert.classList.add('show');
+      }, 100);
+
+      setTimeout(() => {
+        sliderAlert.classList.remove('show');
+        setTimeout(() => {
+          sliderAlert.style.right = '-100%'; // Reset position off screen
+        }, 500); // Adjust if needed to match transition duration
+      }, 5000); // Adjust duration as needed
+    });
+  </script>
+
 </body>
 
 </html>

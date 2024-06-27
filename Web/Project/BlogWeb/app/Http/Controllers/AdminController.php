@@ -24,14 +24,27 @@ class AdminController extends Controller
     {
         if($req->has('submit'))
         {
-            $name = $req->input('name');
-            $email = $req->input('email');
-            $password = Hash::make($req->input('password'));
+            $req->validate([
+                'name' => 'required|string|max:255',
+                'email' => 'required|string|email|unique:users|max:255',
+                'mobile' => 'required|numeric',
+                'address' => 'required|string|max:255',
+                'gender' => 'required',
+                'profile' => 'image|mimes:jpg,jpeg,png|max:204',
+            ]);
+
+            return response()->json([
+                'message' => 'Success'
+            ]);
+
+            $name = $req->name;
+            $email = $req->email;
+            $password = Hash::make($req->password);
             $profilePhoto = "Profile.png";
 
-            $address = $req->input('address');
-            $mobile = $req->input('mobile');
-            $gender = $req->input('gender');
+            $address = $req->address;
+            $mobile = $req->mobile;
+            $gender = $req->gender;
 
             if(User::where('email',$email)->exists())
             {
@@ -86,12 +99,21 @@ class AdminController extends Controller
         
         if($req->has('submit'))
         {
+            $req->validate([
+                'name' => 'required|string|max:255',
+                'email' => 'required|string|email|max:255',
+                'mobile' => 'required|numeric',
+                'address' => 'required|string|max:255',
+                'gender' => 'required',
+                'profile' => 'image|mimes:jpg,jpeg,png|max:204',
+                ]);
+            
             $profile = Profile::where('user_id',$user->id)->first();
-            $name = $req->input('name');
-            $email = $req->input('email');
-            $gender = $req->input('gender');
-            $address = $req->input('address');
-            $mobile = $req->input('mobile');
+            $name = $req->name;
+            $email = $req->email;
+            $gender = $req->gender;
+            $address = $req->address;
+            $mobile = $req->mobile;
             $profileImage = $admin->profile;
                 
             if($req->hasFile('profile'))

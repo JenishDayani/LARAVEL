@@ -1170,3 +1170,13 @@ if(Auth::check())
         </div><!-- End Right side columns -->
 
       </div> --}}
+
+
+
+@if($errors->any())
+    @foreach ($errors->all() as $error)
+        <div id="slider-alert" class="bg-danger slider-alert text-white rounded shadow-lg" style="padding: 20px">
+                {{ $error }}
+        </div>
+    @endforeach
+@endif

@@ -62,9 +62,7 @@
                 <div class="row mb-3">
                   <label for="inputAddress" class="col-sm-2 col-form-label">Address</label>
                 <div class="col-sm-10">
-                    <textarea class="form-control" id="inputAddress" style="height: 100px;" name="address">
-                      {{trim($profile->profiles->address)}}
-                    </textarea>
+                    <input type="text" class="form-control" id="inputAddress" value="{{$profile->profiles->address}}" name="address">
                   </div>
                 </div>
                 <div class="row mb-3">

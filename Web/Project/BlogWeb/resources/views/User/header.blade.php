@@ -71,7 +71,7 @@
       <nav id="navbar" class="navbar">
         <ul>
           <li><a href="{{route('Home')}}">Blog</a></li>
-          @if(Auth::check())
+          @if(isUser())
           <li><a href="{{route('LikeBlogView')}}">Liked Blog</a></li>
           {{-- @endif --}}
           {{-- <li class="dropdown"><a href="category.html"><span>Category</span> <i class="bi bi-chevron-down dropdown-indicator"></i></a>
@@ -128,3 +128,12 @@
   </header><!-- End Header -->
 
   <main id="main">
+
+    
+@if ($errors->any())
+    @foreach ($errors->all() as $error)
+        <div id="slider-alert" class="bg-danger slider-alert text-white px-4 py-2 rounded shadow-lg">
+                {{ $error }}
+        </div>
+    @endforeach
+@endif

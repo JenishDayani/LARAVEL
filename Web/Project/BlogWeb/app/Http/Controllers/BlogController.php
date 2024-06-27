@@ -16,9 +16,17 @@ class BlogController extends Controller
     {
             if($req->has('submit'))
             {
-                $title = $req->input('title');
-                $desc = $req->input('desc');
-                $tag = $req->input('tag');
+                $req->validate([
+                    'title' => 'required|string|max:50',
+                    'desc' => 'required|string|max:500',
+                    'tag' => 'required|string',
+                    'blogPhoto' => 'required|image|mimes:jpg,jpeg,png|max:204',
+                ]);
+
+                $title = $req->title;
+                $desc = $req->desc;
+                $tag = $req->tag;
+            
 
 
                 if($req->hasFile('blogPhoto'))
@@ -59,9 +67,15 @@ class BlogController extends Controller
         $blog = Blogs::find($id);
         if($req->has('update'))
         {
-            $title = $req->input('title');
-            $desc = $req->input('desc');
-            $tag = $req->input('tag');
+            $req->validate([
+                'title' => 'required|string|max:50',
+                'desc' => 'required|string|max:500',
+                'tag' => 'required|string',
+                'blogPhoto' => 'image|mimes:jpg,jpeg,png|max:204',
+            ]);
+            $title = $req->title;
+            $desc = $req->desc;
+            $tag = $req->tag;
             $blogImage = $blog->blog_image;
 
             if($req->hasFile('blogPhoto'))
