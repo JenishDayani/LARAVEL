@@ -4,111 +4,86 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>FIREBASE CRUD</title>
-    <script
-        src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"
-        integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg=="
-        crossorigin="anonymous"
-    ></script>
-
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 </head>
 <body>
-    <h1>User</h1>
+    <div class="container">
+        <h1>User CRUD</h1>
+        <form id="addUser">
+            <div class="form-group">
+                <label for="name">Name:</label>
+                <input type="text" class="form-control" name="name" placeholder="Name" id="name" />
+            </div>
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" class="form-control" name="email" placeholder="Email" id="email" />
+            </div>
+            <button type="submit" class="btn btn-primary" id="submitUser">Submit</button>
+        </form>
 
-    <form id="addUser">
-        <label for="name">Name:</label>
-        <input type="text" name="name" placeholder="Name" id="name" />
-        <br /><br />
-        <label for="email">Email:</label>
-        <input type="email" name="email" placeholder="Email" id="email" />
-        <br /><br />
-        <button type="submit" name="submit" id="submitUser">Submit</button>
-    </form>
+        <h2>Users:</h2>
+        <table id="user-table" class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody id="user-list"></tbody>
+        </table>
 
-    <h2>Users:</h2>
-    <table id="user-table" border  ="10px">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Action</th>
-            </tr>
-        </thead>
-        <tbody id="user-list"></tbody>
-    </table>
-
-
-        <!-- Button trigger modal -->
-    {{-- <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#updateModel">
-    Edit
-    </button> --}}
-
-    <!-- Edit Modal -->
-    <form id="userUpdateForm">
-        <div class="modal fade" id="updateModel" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered" role="document">
-                <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLongTitle">Modal title</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body" id="updateBody">
-                
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" id="updateUserButton">Update</button>
-                </div>
+        <!-- Edit Modal -->
+        <form id="userUpdateForm">
+            <div class="modal fade" id="updateModel" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLongTitle">Edit User</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body" id="updateBody"></div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-primary" id="updateUserButton">Update</button>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
-    </form>
+        </form>
 
-
-
-
-    <!-- Delete Modal -->
+        <!-- Delete Modal -->
         <div class="modal fade" id="deleteModel" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLongTitle">Modal title</h5>
-                    <button type="button" class="close deleteCancel" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body" id="deleteBody">
-                    Are you sure you want to delete the User !
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary deleteCancel" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-danger" id="deleteUserButton">Delete</button>
-                </div>
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLongTitle">Delete User</h5>
+                        <button type="button" class="close deleteCancel" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body" id="deleteBody">
+                        Are you sure you want to delete the user?
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary deleteCancel" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-danger" id="deleteUserButton">Delete</button>
+                    </div>
                 </div>
             </div>
         </div>
-
-
+    </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.1.3/firebase-app.js";
-        import {
-            getDatabase,
-            ref,
-            push,
-            onValue,
-            update,
-            remove,
-        } from "https://www.gstatic.com/firebasejs/9.1.3/firebase-database.js";
-
+        import { getDatabase, ref, push, onValue, update, remove } from "https://www.gstatic.com/firebasejs/9.1.3/firebase-database.js";
 
         const firebaseConfig = {
             apiKey: "{{config('services.firebase.apiKey')}}",
@@ -146,9 +121,6 @@
                     </td>
                 `;
                 userListElement.appendChild(tableRow);
-                
-
-
             });
         });
 
@@ -171,24 +143,23 @@
                 });
         });
 
-        let updateUserId = 0;
+        
         // Edit User
+        let updateUserId = null;
         $("body").on("click", ".updateUserButton", function() {
             updateUserId = $(this).attr("data-id");
-            onValue(ref(database,'users/' + updateUserId), (snapshot) => {
+            onValue(ref(database, 'users/' + updateUserId), (snapshot) => {
                 const userData = snapshot.val();
-                // console.log(userData.name);
-                // console.log(userData.email);
-                
-                
                 const updateBody = document.getElementById("updateBody");
                 updateBody.innerHTML = `
-                    <label for="name">Name:</label>
-                    <input type="text" name="name" value="${userData.name}" id="updateName" />
-                    <br /><br />
-                    <label for="email">Email:</label>
-                    <input type="email" name="email" value="${userData.email}" id="updateEmail" />
-                    <br /><br />
+                    <div class="form-group">
+                        <label for="updateName">Name:</label>
+                        <input type="text" class="form-control" name="name" value="${userData.name}" id="updateName" />
+                    </div>
+                    <div class="form-group">
+                        <label for="updateEmail">Email:</label>
+                        <input type="email" class="form-control" name="email" value="${userData.email}" id="updateEmail" />
+                    </div>
                 `;
             });
         });
@@ -196,9 +167,6 @@
         $("body").on("click", "#updateUserButton", function() {
             const name = document.getElementById("updateName").value;
             const email = document.getElementById("updateEmail").value;
-            console.log(name);
-            console.log(email);
-            console.log(updateUserId);
 
             update(ref(database, 'users/' + updateUserId), {
                 name: name,
@@ -213,32 +181,28 @@
             });
         });
 
-
         // Delete User
+        let deleteUserId = null;
+        $("body").on("click", ".deleteUserButton", function() {
+            deleteUserId = $(this).attr("data-id");
+        });
 
-        $("body").on("click", ".deleteUserButton",function() {
-            let deleteUserId = $(this).attr("data-id");
-            $("#deleteUserButton").on("click", function() {
-                remove(ref(database, 'users/' + deleteUserId), {
-                    name: name,
-                    email: email,
-                })
+        $("#deleteUserButton").on("click", function() {
+            if (deleteUserId) {
+                remove(ref(database, 'users/' + deleteUserId))
                 .then(() => {
                     console.log("User deleted successfully.");
                     $("#deleteModel").modal('hide');
-
                 })
                 .catch((error) => {
-                    console.error("Error updating user: ", error);
+                    console.error("Error deleting user: ", error);
                 });
-            });
-
-            $(".deleteCancel").off().on("click", function() {
-                deleteUserId = null;
-            });
-            console.log(deleteUserId + " Deleted Successfully");
+            }
         });
 
+        $(".deleteCancel").on("click", function() {
+            deleteUserId = null;
+        });
     </script>
 </body>
 </html>

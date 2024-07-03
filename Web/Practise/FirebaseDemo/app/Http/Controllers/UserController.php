@@ -9,6 +9,7 @@ class UserController extends Controller
     public function addUser()
     {
         // return view('users');
-        return view('viewusers');
+        // return view('viewusers');
+        return view('deleteusers');
     }
 }
