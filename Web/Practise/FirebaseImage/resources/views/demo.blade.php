@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FIREBASE CRUD</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+
+  <!-- Compiled and minified CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+
+    <!-- Compiled and minified JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>User CRUD</h1>
+        <form id="addUser">
+            <div class="form-group">
+                <label for="name">Name:</label>
+                <input type="text" class="form-control" name="name" placeholder="Name" id="name" />
+            </div>
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" class="form-control" name="email" placeholder="Email" id="email" />
+            </div>
+            <div class="file-field input-field">
+                <div class="btn">
+                    <span>File</span>
+                    <input type="file" accept="image/*" id="imageUpload" />
+                </div>
+                <div class="file-path-wrapper">
+                    <input class="file-path validate" type="text">
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary" id="submitUser">Submit</button>
+        </form>
+
+        {{-- <h2>Users:</h2>
+        <table id="user-table" class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody id="user-list"></tbody>
+        </table> --}}
+
+        <!-- Edit Modal -->
+        {{-- <form id="userUpdateForm">
+            <div class="modal fade" id="updateModel" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLongTitle">Edit User</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body" id="updateBody"></div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-primary" id="updateUserButton">Update</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form> --}}
+
+        <!-- Delete Modal -->
+        {{-- <div class="modal fade" id="deleteModel" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLongTitle">Delete User</h5>
+                        <button type="button" class="close deleteCancel" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body" id="deleteBody">
+                        Are you sure you want to delete the user?
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary deleteCancel" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-danger" id="deleteUserButton">Delete</button>
+                    </div>
+                </div>
+            </div>
+        </div> --}}
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.1.3/firebase-app.js";
+        import { getDatabase, ref, push, onValue, update, remove } from "https://www.gstatic.com/firebasejs/9.1.3/firebase-database.js";
+        import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/9.1.3/firebase-storage.js";
+
+        const firebaseConfig = {
+                apiKey: "AIzaSyDMXsLHrCvJg1I_-xGBMccIfXiKvlEc7IM",
+                authDomain: "laravelimagedemo.firebaseapp.com",
+                projectId: "laravelimagedemo",
+                storageBucket: "laravelimagedemo.appspot.com",
+                messagingSenderId: "750043227965",
+                appId: "1:750043227965:web:fdd5d1e685ec49da880754",
+                measurementId: "G-SYVC1P92CQ"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const database = getDatabase(app);
+        const storage = getStorage(app);
+
+        document.getElementById("addUser").addEventListener("submit", function (event) {
+    event.preventDefault();
+    const name = document.getElementById("name").value;
+    const email = document.getElementById("email").value;
+    const fileInput = document.getElementById("imageUpload");
+    const file = fileInput.files[0];
+
+    if (file) {
+        const id = 25;
+        const storageReference = storageRef(storage, 'Users/' + id + '/' + file.name);
+        uploadBytes(storageReference, file).then((snapshot) => {
+            getDownloadURL(snapshot.ref).then((downloadURL) => {
+                // push(ref(database, "users"), {
+                //     name: name,
+                //     email: email,
+                //     imageUrl: downloadURL,
+                // })
+                console.log(downloadURL);
+                // .then(() => {
+                //     console.log("Data saved successfully.");
+                //     document.getElementById("addUser").reset();
+                // })
+                // .catch((error) => {
+                //     console.error("Error saving data: ", error);
+                // });
+            });
+        }).catch((error) => {
+            console.error("Error uploading file: ", error);
+        });
+    }
+});
+
+        // View User
+        // const userListElement = document.getElementById("user-list");
+        // onValue(ref(database, "users"), (snapshot) => {
+        //     userListElement.innerHTML = "";
+        //     snapshot.forEach((childSnapshot) => {
+        //         const userId = childSnapshot.key;
+        //         const userData = childSnapshot.val();
+        //         const tableRow = document.createElement("tr");
+        //         tableRow.innerHTML = `
+        //             <td>${userId}</td>
+        //             <td>${userData.name}</td>
+        //             <td>${userData.email}</td>
+        //             <td>
+        //                 <button type="button" class="btn btn-primary updateUserButton" data-toggle="modal" data-target="#updateModel" data-id="${userId}">
+        //                     Edit
+        //                 </button>
+        //                 <button type="button" class="btn btn-danger deleteUserButton" data-toggle="modal" data-target="#deleteModel" data-id="${userId}">
+        //                     Delete
+        //                 </button>
+        //             </td>
+        //         `;
+        //         userListElement.appendChild(tableRow);
+        //     });
+        // });
+
+        // Add User
+        // document.getElementById("addUser").addEventListener("submit", function (event) {
+        //     event.preventDefault();
+            // const name = document.getElementById("name").value;
+            // const email = document.getElementById("email").value;
+
+            
+            // push(ref(database, "users"), {
+            //     name: name,
+            //     email: email,
+            // })
+            //     .then(() => {
+            //         console.log("Data saved successfully.");
+            //         document.getElementById("addUser").reset();
+            //     })
+            //     .catch((error) => {
+            //         console.error("Error saving data: ", error);
+            //     });
+        // });
+
+        
+        // Edit User
+        // let updateUserId = null;
+        // $("body").on("click", ".updateUserButton", function() {
+        //     updateUserId = $(this).attr("data-id");
+        //     onValue(ref(database, 'users/' + updateUserId), (snapshot) => {
+        //         const userData = snapshot.val();
+        //         const updateBody = document.getElementById("updateBody");
+        //         updateBody.innerHTML = `
+        //             <div class="form-group">
+        //                 <label for="updateName">Name:</label>
+        //                 <input type="text" class="form-control" name="name" value="${userData.name}" id="updateName" />
+        //             </div>
+        //             <div class="form-group">
+        //                 <label for="updateEmail">Email:</label>
+        //                 <input type="email" class="form-control" name="email" value="${userData.email}" id="updateEmail" />
+        //             </div>
+        //         `;
+        //     });
+        // });
+
+        // $("body").on("click", "#updateUserButton", function() {
+        //     const name = document.getElementById("updateName").value;
+        //     const email = document.getElementById("updateEmail").value;
+
+        //     update(ref(database, 'users/' + updateUserId), {
+        //         name: name,
+        //         email: email,
+        //     })
+        //     .then(() => {
+        //         console.log("User updated successfully.");
+        //         $("#updateModel").modal('hide');
+        //     })
+        //     .catch((error) => {
+        //         console.error("Error updating user: ", error);
+        //     });
+        // });
+
+        // Delete User
+        // let deleteUserId = null;
+        // $("body").on("click", ".deleteUserButton", function() {
+        //     deleteUserId = $(this).attr("data-id");
+        // });
+
+        // $("#deleteUserButton").on("click", function() {
+        //     if (deleteUserId) {
+        //         remove(ref(database, 'users/' + deleteUserId))
+        //         .then(() => {
+        //             console.log("User deleted successfully.");
+        //             $("#deleteModel").modal('hide');
+        //         })
+        //         .catch((error) => {
+        //             console.error("Error deleting user: ", error);
+        //         });
+        //     }
+        // });
+
+        // $(".deleteCancel").on("click", function() {
+        //     deleteUserId = null;
+        // });
+    </script>
+</body>
+</html>
