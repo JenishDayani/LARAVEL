@@ -118,36 +118,36 @@
         const storage = getStorage(app);
 
         document.getElementById("addUser").addEventListener("submit", function (event) {
-    event.preventDefault();
-    const name = document.getElementById("name").value;
-    const email = document.getElementById("email").value;
-    const fileInput = document.getElementById("imageUpload");
-    const file = fileInput.files[0];
+            event.preventDefault();
+            const name = document.getElementById("name").value;
+            const email = document.getElementById("email").value;
+            const fileInput = document.getElementById("imageUpload");
+            const file = fileInput.files[0];
 
-    if (file) {
-        const id = 25;
-        const storageReference = storageRef(storage, 'Users/' + id + '/' + file.name);
-        uploadBytes(storageReference, file).then((snapshot) => {
-            getDownloadURL(snapshot.ref).then((downloadURL) => {
-                // push(ref(database, "users"), {
-                //     name: name,
-                //     email: email,
-                //     imageUrl: downloadURL,
-                // })
-                console.log(downloadURL);
-                // .then(() => {
-                //     console.log("Data saved successfully.");
-                //     document.getElementById("addUser").reset();
-                // })
-                // .catch((error) => {
-                //     console.error("Error saving data: ", error);
-                // });
-            });
-        }).catch((error) => {
-            console.error("Error uploading file: ", error);
+            if (file) {
+                const id = 25;
+                const storageReference = storageRef(storage, 'Users/' + id + '/' + file.name);
+                uploadBytes(storageReference, file).then((snapshot) => {
+                    getDownloadURL(snapshot.ref).then((downloadURL) => {
+                        // push(ref(database, "users"), {
+                        //     name: name,
+                        //     email: email,
+                        //     imageUrl: downloadURL,
+                        // })
+                        console.log(downloadURL);
+                        // .then(() => {
+                        //     console.log("Data saved successfully.");
+                        //     document.getElementById("addUser").reset();
+                        // })
+                        // .catch((error) => {
+                        //     console.error("Error saving data: ", error);
+                        // });
+                    });
+                }).catch((error) => {
+                    console.error("Error uploading file: ", error);
+                });
+            }
         });
-    }
-});
 
         // View User
         // const userListElement = document.getElementById("user-list");
